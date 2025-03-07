@@ -54,8 +54,10 @@ void receivedCallback( uint32_t from, String &msg ) {
   if (str1.equals(str3)) {
     if (buttonState == 0) {
       mesh.sendSingle(624409705,"bedside_off");
+      mesh.sendSingle(4155616721,"powled0");
     } else {
       mesh.sendSingle(624409705,"bedside_on");
+      mesh.sendSingle(4155616721,"powled1");
     }
   }
 }
@@ -74,7 +76,7 @@ void setup() {
 
 void loop() {
 
-  powerBut();
+  powerBatt();
 
   mesh.update();
 
