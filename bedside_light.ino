@@ -19,9 +19,11 @@ void power (){
   if (buttonState == 1) {
       buttonState = 0;
       mesh.sendSingle(624409705,"bedside_off");
+      mesh.sendSingle(4155616721,"powled0");
     } else {
       buttonState++;
       mesh.sendSingle(624409705,"bedside_on");
+      mesh.sendSingle(4155616721,"powled1");
     }
 }
 
