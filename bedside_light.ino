@@ -57,9 +57,11 @@ void receivedCallback( uint32_t from, String &msg ) {
     if (buttonState == 0) {
       mesh.sendSingle(624409705,"bedside_off");
       mesh.sendSingle(4155616721,"powled0");
+      mesh.sendSingle(1127818912,"bdsdl0");
     } else {
       mesh.sendSingle(624409705,"bedside_on");
       mesh.sendSingle(4155616721,"powled1");
+      mesh.sendSingle(1127818912,"bdsdl1");
     }
   }
 }
