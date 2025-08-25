@@ -18,14 +18,14 @@ int lButState = LOW; // Зберігаємо останній стан кноп�
 void power (){
   if (buttonState == 1) {
       buttonState = 0;
-      mesh.sendSingle(624409705,"bedside_off");
-      mesh.sendSingle(4155616721,"powled0");
-      mesh.sendSingle(1127818912,"bdsdl0");
+      mesh.sendBroadcast("bedside_off");
+      mesh.sendBroadcast("powled0");
+      mesh.sendBroadcast("bdsdl0");
     } else {
       buttonState++;
-      mesh.sendSingle(624409705,"bedside_on");
-      mesh.sendSingle(4155616721,"powled1");
-      mesh.sendSingle(1127818912,"bdsdl1");
+      mesh.sendBroadcast("bedside_on");
+      mesh.sendBroadcast("powled1");
+      mesh.sendBroadcast("bdsdl1");
     }
 }
 
@@ -57,13 +57,13 @@ void receivedCallback( uint32_t from, String &msg ) {
 
   if (str1.equals(str3)) {
     if (buttonState == 0) {
-      mesh.sendSingle(624409705,"bedside_off");
-      mesh.sendSingle(4155616721,"powled0");
-      mesh.sendSingle(1127818912,"bdsdl0");
+      mesh.sendBroadcast("bedside_off");
+      mesh.sendBroadcast("powled0");
+      mesh.sendBroadcast("bdsdl0");
     } else {
-      mesh.sendSingle(624409705,"bedside_on");
-      mesh.sendSingle(4155616721,"powled1");
-      mesh.sendSingle(1127818912,"bdsdl1");
+      mesh.sendBroadcast("bedside_on");
+      mesh.sendBroadcast("powled1");
+      mesh.sendBroadcast("bdsdl1");
     }
   }
 }
