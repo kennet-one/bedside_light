@@ -4,11 +4,10 @@
 //************************************************************
 #include "painlessMesh.h"
 #include "mash_parameter.h"
+#include "CRCMASH.h"
 
 Scheduler userScheduler; // to control your personal task
-painlessMesh  mesh;
-
-
+// (disabled) painlessMesh mesh; // now provided by CRCMASH.h
 char buttonState = 0;
 
 unsigned long pMillis = 0;
@@ -18,14 +17,14 @@ int lButState = LOW; // Зберігаємо останній стан кноп�
 void power (){
   if (buttonState == 1) {
       buttonState = 0;
-      mesh.sendBroadcast("bedside_off");
-      mesh.sendBroadcast("powled0");
-      mesh.sendBroadcast("bdsdl0");
+      sendB("bedsi_off");
+      sendB("powled0");
+      sendB("bdsdl0");
     } else {
       buttonState++;
-      mesh.sendBroadcast("bedside_on");
-      mesh.sendBroadcast("powled1");
-      mesh.sendBroadcast("bdsdl1");
+      sendB("bedsi_on");
+      sendB("powled1");
+      sendB("bdsdl1");
     }
 }
 
@@ -45,9 +44,9 @@ void powerBatt(){
   }
 }
 
-void receivedCallback( uint32_t from, String &msg ) {
+void handleBodyFrom( uint32_t from, const String &body ) {
 
-  String str1 = msg.c_str();
+  String str1 = body.c_str();
   String str2 = "bedside";
   String str3 = "bedside_echo";
 
@@ -57,13 +56,13 @@ void receivedCallback( uint32_t from, String &msg ) {
 
   if (str1.equals(str3)) {
     if (buttonState == 0) {
-      mesh.sendBroadcast("bedside_off");
-      mesh.sendBroadcast("powled0");
-      mesh.sendBroadcast("bdsdl0");
+      sendB("bedsi_off");
+      sendB("powled0");
+      sendB("bdsdl0");
     } else {
-      mesh.sendBroadcast("bedside_on");
-      mesh.sendBroadcast("powled1");
-      mesh.sendBroadcast("bdsdl1");
+      sendB("bedsi_on");
+      sendB("powled1");
+      sendB("bdsdl1");
     }
   }
 }
@@ -84,6 +83,8 @@ void loop() {
 
   powerBatt();
 
+  // === CRCMASH Variant B: (from,body) queue ===
+  for (uint8_t _i=0; _i<4; ++_i){ uint32_t _from; String _b; if (!qPop2(_from, _b)) break; handleBodyFrom(_from, _b); }
   mesh.update();
 
   if (buttonState == 0) {
