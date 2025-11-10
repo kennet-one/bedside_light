@@ -15,6 +15,10 @@ unsigned long pMillis = 0;
 const long interval = 100;
 int lButState = LOW; // Зберігаємо останній стан кнопки
 
+unsigned long previousMillis = 0;
+const long intervaldelay = 20000; 
+bool messageSent = false;  // Прапорець для відстеження відправки повідомлення
+
 void power (){
   if (buttonState == 1) {
       buttonState = 0;
@@ -44,7 +48,17 @@ void powerBatt(){
     }
   }
 }
-
+void echo(){
+  if (buttonState == 0) {
+    sendB("bedsi_off");
+    sendB("powled0");
+    sendB("bdsdl0");
+  } else {
+    sendB("bedsi_on");
+    sendB("powled1");
+    sendB("bdsdl1");
+  }
+}
 void handleBody(const String &msg ) {
 
   if (msg.equals("bedside")) {
@@ -52,15 +66,7 @@ void handleBody(const String &msg ) {
   }
 
   if (msg.equals("bedside_echo")) {
-    if (buttonState == 0) {
-      sendB("bedsi_off");
-      sendB("powled0");
-      sendB("bdsdl0");
-    } else {
-      sendB("bedsi_on");
-      sendB("powled1");
-      sendB("bdsdl1");
-    }
+    echo();
   }
 }
 
@@ -78,6 +84,16 @@ void setup() {
 
 void loop() {
   powerBatt();
+
+  if (!messageSent) { // Перевіряємо, чи повідомлення ще не було відправлено
+    unsigned long currentMillis = millis();
+
+    if (currentMillis - previousMillis >= intervaldelay) {
+      echo();
+      // Встановлюємо прапорець, щоб більше не відправляти повідомлення
+      messageSent = true;
+    }
+  }
 
   for (uint8_t _i=0; _i<4; ++_i){ String _b; if (!qPop(_b)) break; handleBody(_b); }
   mesh.update();
